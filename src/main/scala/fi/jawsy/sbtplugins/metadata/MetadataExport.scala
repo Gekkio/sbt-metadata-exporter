@@ -8,6 +8,7 @@ trait ExportBasicDependencyProject extends MetadataExport {
   override type P <: BasicDependencyProject
   val metadataConfigurations = List("compile", "provided", "runtime", "test")
 
+  override def description = "Managed classpath" :: super.description
   override def metadataXml: NodeSeq = {
     import project._
     super.metadataXml ++
@@ -28,6 +29,8 @@ trait ExportBasicDependencyProject extends MetadataExport {
 trait ExportMavenStyleScalaPaths extends MetadataExport {
   override type P <: MavenStyleScalaPaths
 
+  override def description = "Maven-style Scala paths" :: super.description
+
   override def metadataXml: NodeSeq = {
     import project._
     super.metadataXml ++
@@ -46,6 +49,8 @@ trait ExportMavenStyleScalaPaths extends MetadataExport {
 trait ExportMavenStyleWebScalaPaths extends MetadataExport {
   override type P <: MavenStyleWebScalaPaths
 
+  override def description = "Web-app path" :: super.description
+
   override def metadataXml: NodeSeq = {
     import project._
     super.metadataXml ++
@@ -56,33 +61,38 @@ trait ExportMavenStyleWebScalaPaths extends MetadataExport {
 class MetadataExportProcessor extends BasicProcessor {
 
   implicit def defaultWebProject(p: DefaultWebProject) =
-    new ExportProject(p)
+    new ExportProject(p, "DefaultWebProject")
     with ExportMavenStyleScalaPaths
     with ExportMavenStyleWebScalaPaths
     with ExportBasicDependencyProject
 
   implicit def defaultProject(p: DefaultProject) =
-    new ExportProject(p)
+    new ExportProject(p, "DefaultProject")
     with ExportMavenStyleScalaPaths
     with ExportBasicDependencyProject
 
-  implicit def project(p: Project) = new ExportProject(p)
+  implicit def project(p: Project) = new ExportProject(p, "Project")
 
   def apply(project: Project, args: String) {
     project match {
-      case p: DefaultWebProject => project.log.info("Detected project as DefaultWebProject"); p.exportMetadata
-      case p: DefaultProject => project.log.info("Detected project as DefaultProject"); p.exportMetadata
+      case p: DefaultWebProject => p.exportMetadata
+      case p: DefaultProject => p.exportMetadata
       case p: ParentProject => {
-        project.log.info("Detected project as ParentProject"); p.exportMetadata
+        p.exportMetadata
         p.dependencies.foreach(apply(_, ""))
       }
-      case p: Project => project.log.info("Detected project as Project"); p.exportMetadata
+      case p: Project => p.exportMetadata
     }
   }
 }
 
-class ExportProject[Pr <: Project](val project: Pr) extends MetadataExport {
+class ExportProject[Pr <: Project](val project: Pr, projectType: String) extends MetadataExport {
   override type P = Pr
+  override def exportMetadata {
+    project.log.info(project + " looks like a " + projectType + ". These will be exported:")
+    description.foreach(s => project.log.info("* " + s))
+    super.exportMetadata
+  }
 }
 
 trait MetadataExport {
@@ -90,6 +100,7 @@ trait MetadataExport {
   type P <: Project
 
   def metadataXml: NodeSeq = NodeSeq.Empty
+  def description: List[String] = "Basic project details" :: Nil
 
   def exportMetadata {
     import project._
@@ -101,7 +112,7 @@ trait MetadataExport {
     val metadataXmlPath = outputPath / "sbt-metadata.xml"
     FileUtilities.touch(metadataXmlPath, log)
     XML.saveFull(metadataXmlPath.relativePath, xml, "UTF-8", true, null)
-    log.info("Wrote metadata to " + metadataXmlPath)
+    log.success("Wrote metadata to " + metadataXmlPath)
   }
 
 }
