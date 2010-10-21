@@ -77,12 +77,10 @@ class MetadataExportProcessor extends BasicProcessor {
     project match {
       case p: DefaultWebProject => p.exportMetadata
       case p: DefaultProject => p.exportMetadata
-      case p: ParentProject => {
-        p.exportMetadata
-        p.subProjects.map(_._2).foreach(apply(_, ""))
-      }
+      case p: ParentProject => p.exportMetadata
       case p: Project => p.exportMetadata
     }
+    project.subProjects.map(_._2).foreach(apply(_, ""))
   }
 }
 
