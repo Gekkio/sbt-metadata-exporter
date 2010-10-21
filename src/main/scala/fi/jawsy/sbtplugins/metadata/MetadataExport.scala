@@ -14,7 +14,7 @@ trait ExportBasicDependencyProject extends MetadataExport {
     super.metadataXml ++
     <ivy-configurations>
       { metadataConfigurations.map(new Configuration(_)).flatMap(conf =>
-        Some(managedClasspath(conf).get).filter(!_.isEmpty).toSeq.map(cp =>
+        Some(projectClasspath(conf).get).filter(!_.isEmpty).toSeq.map(cp =>
           <configuration name={ conf.name }>
             { cp.flatMap(entry =>
               <classpathEntry path={ entry.relativePath } />
@@ -97,8 +97,18 @@ trait MetadataExport {
   val project: P
   type P <: Project
 
-  def metadataXml: NodeSeq = NodeSeq.Empty
-  def description: List[String] = "Basic project details" :: Nil
+  def metadataXml: NodeSeq = {
+    val deps = project.dependencies
+    if (deps.isEmpty) NodeSeq.Empty
+    else
+      <dependencies>
+        { deps.map(dep =>
+          <dependency name={ dep.projectName.value } organization={ dep.projectOrganization.value } version={ dep.projectVersion.value.toString } />
+        )}
+      </dependencies>
+  }
+
+  def description: List[String] = "Basic project details and project-to-project dependencies" :: Nil
 
   def exportMetadata {
     import project._
