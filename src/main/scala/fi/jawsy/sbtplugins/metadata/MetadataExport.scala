@@ -111,7 +111,7 @@ trait MetadataExport {
       </project>
     val metadataXmlPath = outputPath / "sbt-metadata.xml"
     FileUtilities.touch(metadataXmlPath, log)
-    XML.saveFull(metadataXmlPath.relativePath, xml, "UTF-8", true, null)
+    XML.saveFull(metadataXmlPath.absolutePath, xml, "UTF-8", true, null)
     log.success("Wrote metadata to " + metadataXmlPath)
   }
 
