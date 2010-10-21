@@ -79,7 +79,7 @@ class MetadataExportProcessor extends BasicProcessor {
       case p: DefaultProject => p.exportMetadata
       case p: ParentProject => {
         p.exportMetadata
-        p.dependencies.foreach(apply(_, ""))
+        p.subProjects.map(_._2).foreach(apply(_, ""))
       }
       case p: Project => p.exportMetadata
     }
