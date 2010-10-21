@@ -72,6 +72,10 @@ class MetadataExportProcessor extends BasicProcessor {
     project match {
       case p: DefaultWebProject => project.log.info("Detected project as DefaultWebProject"); p.exportMetadata
       case p: DefaultProject => project.log.info("Detected project as DefaultProject"); p.exportMetadata
+      case p: ParentProject => {
+        project.log.info("Detected project as ParentProject"); p.exportMetadata
+        p.dependencies.foreach(apply(_, ""))
+      }
       case p: Project => project.log.info("Detected project as Project"); p.exportMetadata
     }
   }
