@@ -1,6 +1,6 @@
 import sbt._
 
-class SbtMetadataPlugin(info: ProjectInfo) extends PluginProject(info) {
+class SbtMetadataExporter(info: ProjectInfo) extends ProcessorProject(info) {
 
   override def managedStyle = ManagedStyle.Maven
 
