@@ -12,7 +12,7 @@ trait ExportBasicDependencyProject extends MetadataExport {
         Some(managedClasspath(conf).get).filter(!_.isEmpty).toSeq.map(cp =>
           <configuration name={ conf.name }>
             { cp.flatMap(entry =>
-              <classpathEntry path={ entry.absolutePath } />
+              <classpathEntry path={ entry.relativePath } />
             )}
           </configuration>
         )
@@ -24,22 +24,22 @@ trait ExportMavenStyleScalaPaths extends MetadataExport {
   self: MavenStyleScalaPaths =>
 
   override def metadataXml: NodeSeq = super.metadataXml ++
-    <mainCompilePath value={ mainCompilePath.absolutePath } />
-    <mainJavaSourcePath value={ mainJavaSourcePath.absolutePath } />
-    <mainResourcesPath value={ mainResourcesPath.absolutePath } />
-    <mainResourcesOutputPath value={ mainResourcesOutputPath.absolutePath } />
-    <mainScalaSourcePath value={ mainScalaSourcePath.absolutePath } />
-    <testCompilePath value={ testCompilePath.absolutePath } />
-    <testJavaSourcePath value={ testJavaSourcePath.absolutePath } />
-    <testResourcesPath value={ testResourcesPath.absolutePath } />
-    <testResourcesOutputPath value={ testResourcesOutputPath.absolutePath } />
-    <testScalaSourcePath value={ testScalaSourcePath.absolutePath } />
+    <mainCompilePath value={ mainCompilePath.relativePath } />
+    <mainJavaSourcePath value={ mainJavaSourcePath.relativePath } />
+    <mainResourcesPath value={ mainResourcesPath.relativePath } />
+    <mainResourcesOutputPath value={ mainResourcesOutputPath.relativePath } />
+    <mainScalaSourcePath value={ mainScalaSourcePath.relativePath } />
+    <testCompilePath value={ testCompilePath.relativePath } />
+    <testJavaSourcePath value={ testJavaSourcePath.relativePath } />
+    <testResourcesPath value={ testResourcesPath.relativePath } />
+    <testResourcesOutputPath value={ testResourcesOutputPath.relativePath } />
+    <testScalaSourcePath value={ testScalaSourcePath.relativePath } />
 }
 
 trait ExportMavenStyleWebScalaPaths extends MetadataExport {
   self: MavenStyleWebScalaPaths =>
   override def metadataXml: NodeSeq = super.metadataXml ++
-    <webappPath value={ webappPath.absolutePath } />
+    <webappPath value={ webappPath.relativePath } />
 }
 
 trait ExportDefaultWebProject
@@ -69,7 +69,7 @@ trait MetadataExport  {
         { metadataXml }
       </project>
     FileUtilities.touch(metadataXmlPath, log)
-    XML.saveFull(metadataXmlPath.absolutePath, xml, "UTF-8", true, null)
+    XML.saveFull(metadataXmlPath.relativePath, xml, "UTF-8", true, null)
     None
   }
 
