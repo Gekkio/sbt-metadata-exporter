@@ -65,7 +65,7 @@ trait MetadataExport  {
   def exportMetadataAction = exportMetadataTask describedAs ExportMetadataDescription
   def exportMetadataTask = task {
     val xml =
-      <project name={projectName.value} organization={ projectOrganization.value } version={ projectVersion.value.toString }>
+      <project name={projectName.value} organization={ projectOrganization.value } version={ projectVersion.value.toString } scalaVersion={ buildScalaVersion } >
         { metadataXml }
       </project>
     FileUtilities.touch(metadataXmlPath, log)
