@@ -7,8 +7,6 @@ sbt-metadata-exporter is a processor for [Simple Build Tool](http://code.google.
 
 ## Usage
 
-__This doesn`t work at the moment as there are no official releases!__
-
 First, tell SBT about the processor (this needs to be done only once per user/machine):
     *jawsy at http://oss.jawsy.fi/maven2/releases
     *metadata is fi.jawsy sbt-metadata-exporter 0.1.0
