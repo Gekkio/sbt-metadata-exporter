@@ -114,7 +114,8 @@ trait MetadataExport {
     import project._
 
     val xml =
-      <project name={projectName.value} organization={ projectOrganization.value } version={ projectVersion.value.toString } scalaVersion={ buildScalaVersion } >
+      <project name={projectName.value} organization={ projectOrganization.value } version={ projectVersion.value.toString } scalaVersion={
+      buildScalaVersion } metadataVersion="1">
         { metadataXml }
       </project>
     val metadataXmlPath = outputPath / "sbt-metadata.xml"
