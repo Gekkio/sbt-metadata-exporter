@@ -2,7 +2,7 @@ organization := "fi.jawsy"
 
 name := "sbt-metadata-exporter"
 
-version := 0.2.0-SNAPSHOT
+version := "0.2.0-SNAPSHOT"
 
 sbtPlugin := true
 
