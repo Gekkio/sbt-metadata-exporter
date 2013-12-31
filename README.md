@@ -1,6 +1,8 @@
 sbt-metadata-exporter
 =================
 
+## *Warning: This plugin is unmaintained and deprecated, and the Maven repository mentioned in this README doesn't exist anymore*
+
 ## Introduction
 
 sbt-metadata-exporter is a processor for [Simple Build Tool](http://code.google.com/p/simple-build-tool/) that exports SBT project metadata into an XML file that can be consumed by an external tool. _This is a proof of concept project that will initially be used for better Eclipse integration for SBT projects_. In theory it could be used for other SBT-related external tool integrations.
